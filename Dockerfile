@@ -1,4 +1,4 @@
-# Stage 1: Build the Maven application using JDK 17
+# Stage 1: Build the Maven application using JDK 17 (Temurin)
 FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
 
@@ -9,8 +9,8 @@ COPY src ./src
 # Compile and package the executable jar without running local tests
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the final lightweight runtime container
-FROM openjdk:17-jdk-slim
+# Stage 2: Use the official lightweight Eclipse Temurin JDK 17 Runtime
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # Copy the compiled jar from the build stage
