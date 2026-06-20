@@ -22,13 +22,19 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // Live Render Production URL Destination Core
+  const API_BASE_URL = 'https://metricscale-backend.onrender.com';
+
   // Fetch transactions using the secure token
   const fetchTransactions = async () => {
     if (!token) return;
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/transactions', {
-        headers: { 'X-Tenant-ID': tenant }
+      const response = await axios.get(`${API_BASE_URL}/api/transactions`, {
+        headers: { 
+          'X-Tenant-ID': tenant,
+          'Authorization': `Bearer ${token}`
+        }
       });
       setTransactions(response.data);
     } catch (error) {
@@ -49,7 +55,7 @@ export default function App() {
     e.preventDefault();
     setErrorMsg('');
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         username: loginUser,
         password: loginPass
       });
@@ -70,7 +76,7 @@ export default function App() {
     e.preventDefault();
     setErrorMsg('');
     try {
-      await axios.post('http://localhost:8080/api/auth/register', {
+      await axios.post(`${API_BASE_URL}/api/auth/register`, {
         username: regUser,
         password: regPass,
         tenantId: regTenant
@@ -98,9 +104,14 @@ export default function App() {
     if (!customerName || !amount) return;
     try {
       await axios.post(
-        `http://localhost:8080/api/transactions/sample?customerName=${customerName}&amount=${amount}`,
+        `${API_BASE_URL}/api/transactions/sample?customerName=${customerName}&amount=${amount}`,
         {},
-        { headers: { 'X-Tenant-ID': tenant } }
+        { 
+          headers: { 
+            'X-Tenant-ID': tenant,
+            'Authorization': `Bearer ${token}`
+          } 
+        }
       );
       setCustomerName('');
       setAmount('');
